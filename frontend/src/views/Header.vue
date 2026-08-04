@@ -7,9 +7,9 @@ import { useIsMobile } from '../utils/composables'
 import {
     DarkModeFilled, LightModeFilled, MenuFilled,
     AdminPanelSettingsFilled, MonitorHeartFilled,
-    KeyboardArrowDownOutlined, OpenInNewOutlined
+    KeyboardArrowDownOutlined
 } from '@vicons/material'
-import { GithubAlt, Language, User, Home } from '@vicons/fa'
+import { Language, User, Home } from '@vicons/fa'
 
 import { useGlobalState } from '../store'
 import { api } from '../api'
@@ -101,13 +101,6 @@ const changeLocale = async (lang) => {
 
     if (localeSwitched) preferredLocale.value = lang;
 }
-
-const version = import.meta.env.PACKAGE_VERSION ? `v${import.meta.env.PACKAGE_VERSION}` : "";
-const showGithubForCurrentUser = computed(() => {
-    if (!openSettings.value.showGithub) return false;
-    if (openSettings.value.showGithubForUser) return true;
-    return showAdminPage.value;
-});
 
 const menuOptions = computed(() => [
     {
@@ -212,9 +205,9 @@ const menuOptions = computed(() => [
 ]);
 
 useHead({
-    title: () => openSettings.value.title || t('title'),
+    title: () => t('title'),
     meta: [
-        { name: "description", content: openSettings.value.description || t('title') },
+        { name: "description", content: t('title') },
     ]
 });
 
@@ -249,11 +242,11 @@ onMounted(async () => {
     <div>
         <n-page-header>
             <template #title>
-                <h3>{{ openSettings.title || t('title') }}</h3>
+                <h3>{{ t('title') }}</h3>
             </template>
             <template #avatar>
-                <div @click="logoClick">
-                    <n-avatar style="margin-left: 10px;" src="/logo.png" />
+                <div class="brand-avatar-wrapper" @click="logoClick">
+                    <n-avatar class="brand-avatar" src="/private-mail-icon.svg" :aria-label="t('title')" />
                 </div>
             </template>
             <template #extra>
@@ -274,20 +267,6 @@ onMounted(async () => {
                             <n-icon :component="KeyboardArrowDownOutlined" style="margin-left: 4px;" />
                         </n-button>
                     </n-dropdown>
-                    <n-button
-                        v-if="!isMobile && showGithubForCurrentUser"
-                        text
-                        size="small"
-                        class="header-version-button"
-                        tag="a"
-                        target="_blank"
-                        href="https://github.com/dreamhunter2333/cloudflare_temp_email"
-                    >
-                        <template #icon>
-                            <n-icon :component="GithubAlt" />
-                        </template>
-                        {{ version || 'Github' }}
-                    </n-button>
                 </n-space>
             </template>
         </n-page-header>
@@ -302,17 +281,6 @@ onMounted(async () => {
                             <n-icon :component="KeyboardArrowDownOutlined" class="mobile-menu-action-arrow" />
                         </button>
                     </n-dropdown>
-                    <a
-                        v-if="showGithubForCurrentUser"
-                        class="mobile-menu-utility-button"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://github.com/dreamhunter2333/cloudflare_temp_email"
-                    >
-                        <n-icon :component="GithubAlt" />
-                        <span class="mobile-menu-action-label">{{ version || 'Github' }}</span>
-                        <n-icon :component="OpenInNewOutlined" class="mobile-menu-action-arrow" />
-                    </a>
                 </div>
             </n-drawer-content>
         </n-drawer>
@@ -362,16 +330,6 @@ onMounted(async () => {
     align-items: center;
 }
 
-.header-version-button {
-    display: inline-flex;
-    align-items: center;
-}
-
-.header-version-button :deep(.n-button__content) {
-    display: inline-flex;
-    align-items: center;
-}
-
 .mobile-menu-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -379,6 +337,15 @@ onMounted(async () => {
     margin-top: 12px;
     padding-top: 12px;
     border-top: 1px solid rgba(128, 128, 128, 0.16);
+}
+
+.brand-avatar-wrapper {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.brand-avatar {
+    background: transparent;
 }
 
 .mobile-menu-utility-button {

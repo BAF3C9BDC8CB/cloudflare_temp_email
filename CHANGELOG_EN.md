@@ -12,6 +12,7 @@
 
 - feat: |Worker| Mailbox addresses can generate permanent public links via `POST/GET/DELETE /api/public_link` and the token-only read endpoint `GET /public_api/mails`; tokens are 10-character Base62 CSPRNG values, one link is active per address, and regeneration, revocation, deletion, or transfer cleans up immediately
 - feat: |Frontend| Added Copy Public Link and Revoke Public Link actions to the address bar and user mailbox list, plus a read-only `/m/<token>` mailbox page reusing the existing mail list and renderer
+- feat: |Frontend| Rebrand the visible UI as Private Mail with a neutral envelope-lock icon and no visible GitHub/old product branding; make `/m/:token` a standalone read-only page containing only the mailbox address, mail list/content, refresh, pagination, and filtering controls, and update PWA metadata and footer branding
 
 ### Bug Fixes
 

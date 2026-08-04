@@ -1,10 +1,9 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { useScopedI18n } from '@/i18n/app'
 
-import { useGlobalState } from '../store'
 import { api } from '../api'
 import MailBox from '../components/MailBox.vue'
 import { isValidPublicToken } from '../utils/public-link'
@@ -12,7 +11,6 @@ import { isValidPublicToken } from '../utils/public-link'
 const route = useRoute()
 const message = useMessage()
 const { t } = useScopedI18n('views.PublicMail')
-const { openSettings } = useGlobalState()
 
 const token = typeof route.params.token === 'string' ? route.params.token : ''
 const invalidToken = ref(!isValidPublicToken(token))
@@ -21,11 +19,10 @@ const mailboxAddress = ref('')
 
 useHead({
     title: () => t('publicMailbox'),
-    meta: [{ name: 'referrer', content: 'no-referrer' }],
-})
-
-onMounted(async () => {
-    await api.getOpenSettings()
+    meta: [
+        { name: 'description', content: () => t('publicMailbox') },
+        { name: 'referrer', content: 'no-referrer' },
+    ],
 })
 
 const fetchMailData = async (limit, offset) => {
@@ -59,13 +56,10 @@ const fetchMailData = async (limit, offset) => {
             <n-result status="error" title="429" :description="t('rateLimited')" />
         </n-card>
         <template v-else>
-            <n-card :bordered="false" embedded class="header-card">
-                <n-flex align="center" justify="space-between" :wrap="false">
-                    <span class="title">{{ openSettings.title || t('publicMailbox') }}</span>
-                    <n-tag v-if="mailboxAddress" type="info" size="small">
-                        {{ t('address') }}: {{ mailboxAddress }}
-                    </n-tag>
-                </n-flex>
+            <n-card v-if="mailboxAddress" :bordered="false" embedded class="header-card">
+                <n-tag type="info" size="small">
+                    {{ t('address') }}: {{ mailboxAddress }}
+                </n-tag>
             </n-card>
             <MailBox :showEMailTo="true" :enableUserDeleteEmail="false" :showReply="false"
                 :showSaveS3="false" :showFilterInput="true" :fetchMailData="fetchMailData" />
@@ -90,8 +84,4 @@ const fetchMailData = async (limit, offset) => {
     margin-bottom: 10px;
 }
 
-.title {
-    font-size: 16px;
-    font-weight: 600;
-}
 </style>

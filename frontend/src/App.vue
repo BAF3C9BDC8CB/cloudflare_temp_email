@@ -3,6 +3,7 @@ import {
   darkTheme,
 } from 'naive-ui'
 import { computed, onMounted, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
 import { useScript } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
 import { useGlobalState } from './store'
@@ -12,18 +13,21 @@ import Footer from './views/Footer.vue';
 import { api } from './api'
 import { getNaiveLocaleConfig } from './i18n/naive-locale'
 import { DEFAULT_LOCALE, isSupportedLocale } from './i18n/utils'
+import { isPublicMailRoute as isPublicMailRoutePath } from './utils/private-mail-route'
 
 const {
   isDark, loading, useSideMargin, telegramApp, isTelegram
 } = useGlobalState()
 const adClient = import.meta.env.VITE_GOOGLE_AD_CLIENT;
 const adSlot = import.meta.env.VITE_GOOGLE_AD_SLOT;
+const route = useRoute()
 const { locale } = useI18n({ useScope: 'global' });
 const theme = computed(() => isDark.value ? darkTheme : null)
 const localeConfig = computed(() => getNaiveLocaleConfig(isSupportedLocale(locale.value) ? locale.value : DEFAULT_LOCALE))
 const isMobile = useIsMobile()
+const isPublicRoute = computed(() => isPublicMailRoutePath(route.path))
 const showSideMargin = computed(() => !isMobile.value && useSideMargin.value);
-const showAd = computed(() => !isMobile.value && adClient && adSlot);
+const showAd = computed(() => !isPublicRoute.value && !isMobile.value && adClient && adSlot);
 const gridMaxCols = computed(() => showAd.value ? 8 : 12);
 
 watchEffect(() => {
@@ -91,7 +95,10 @@ onMounted(async () => {
     <n-spin description="loading..." :show="loading">
       <n-notification-provider container-style="margin-top: 60px;">
         <n-message-provider container-style="margin-top: 20px;">
-          <n-grid x-gap="12" :cols="gridMaxCols">
+          <div v-if="isPublicRoute" class="public-route-frame">
+            <router-view />
+          </div>
+          <n-grid v-else x-gap="12" :cols="gridMaxCols">
             <n-gi v-if="showSideMargin" span="1">
               <div class="side" v-if="showAd">
                 <ins class="adsbygoogle" style="display:block" :data-ad-client="adClient" :data-ad-slot="adSlot"
@@ -116,7 +123,7 @@ onMounted(async () => {
               </div>
             </n-gi>
           </n-grid>
-          <n-back-top />
+          <n-back-top v-if="!isPublicRoute" />
         </n-message-provider>
       </n-notification-provider>
     </n-spin>

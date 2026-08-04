@@ -15,7 +15,7 @@ const { t } = useScopedI18n('views.Footer')
         <div style="text-align: center; padding: 20px">
             <n-space justify="center">
                 <n-text depth="3">
-                    {{ t('copyright') }} © 2023-{{ new Date().getFullYear() }}
+                    {{ t('brand') }} © 2023-{{ new Date().getFullYear() }}
                 </n-text>
                 <n-text depth="3">
                     <div v-html="DOMPurify.sanitize(openSettings.copyright)"></div>

@@ -484,6 +484,10 @@ export const MESSAGE_REGISTRY = {
     }
   },
   "views.Footer": {
+    "brand": {
+      "en": "Private Mail",
+      "zh": "私有邮箱"
+    },
     "copyright": {
       "en": "Copyright",
       "zh": "版权所有"
@@ -581,8 +585,8 @@ export const MESSAGE_REGISTRY = {
       "zh": "状态"
     },
     "title": {
-      "en": "Cloudflare Temp Email",
-      "zh": "Cloudflare 临时邮件"
+      "en": "Private Mail",
+      "zh": "私有邮箱"
     },
     "user": {
       "en": "User",

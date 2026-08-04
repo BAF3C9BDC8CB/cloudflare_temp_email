@@ -37,10 +37,6 @@ const modalShow = computed({
 const configuredApiBaseUrl = import.meta.env.VITE_API_BASE || ''
 const frontendBaseUrl = computed(() => window.location.origin)
 const apiBaseUrl = computed(() => (configuredApiBaseUrl || frontendBaseUrl.value).replace(/\/$/, ''))
-const docLocale = computed(() => locale.value === 'zh' ? 'zh' : 'en')
-const agentDocUrl = computed(() => `https://temp-mail-docs.awsl.uk/${docLocale.value}/guide/feature/agent-email.html`)
-const smtpImapDocUrl = computed(() => `https://temp-mail-docs.awsl.uk/${docLocale.value}/guide/feature/config-smtp-proxy.html`)
-const agentSkillUrl = 'https://github.com/dreamhunter2333/cloudflare_temp_email/blob/main/skills/cf-temp-mail-agent-mail/SKILL.md'
 const autoLoginUrl = computed(() => `${frontendBaseUrl.value}/?jwt=${encodeURIComponent(props.jwt)}`)
 const showAgent = computed(() => !!openSettings.value.enableAgentEmailInfo)
 const smtpImapConfig = computed(() => openSettings.value.smtpImapProxyConfig || {})
@@ -58,7 +54,6 @@ const agentConfigJson = computed(() => JSON.stringify({
 const agentText = computed(() => [
   `${t('currentAddress')}: ${props.address || '-'}`,
   `${t('apiBase')}: ${apiBaseUrl.value}`,
-  `${t('agentSkill')}: ${agentSkillUrl}`,
   `${t('agentConfig')}:`,
   agentConfigJson.value,
 ].join('\n'))
@@ -153,19 +148,8 @@ const copyText = async (text) => {
             <code class="credential-code">{{ apiBaseUrl }}</code>
           </div>
           <div class="credential-field">
-            <span class="credential-label">{{ t('agentSkill') }}</span>
-            <code class="credential-code">
-              <a :href="agentSkillUrl" target="_blank" rel="noopener noreferrer">{{ agentSkillUrl }}</a>
-            </code>
-          </div>
-          <div class="credential-field">
             <span class="credential-label">{{ t('agentConfig') }}</span>
             <pre class="credential-code credential-code-block">{{ agentConfigJson }}</pre>
-          </div>
-          <div class="credential-actions">
-            <n-button tag="a" :href="agentDocUrl" target="_blank" rel="noopener noreferrer" text type="primary">
-              {{ t('docs') }}
-            </n-button>
           </div>
         </div>
       </n-collapse-item>
@@ -207,11 +191,6 @@ const copyText = async (text) => {
           <div class="credential-field">
             <span class="credential-label">{{ t('password') }}</span>
             <code class="credential-code">{{ jwt }}</code>
-          </div>
-          <div class="credential-actions">
-            <n-button tag="a" :href="smtpImapDocUrl" target="_blank" rel="noopener noreferrer" text type="primary">
-              {{ t('docs') }}
-            </n-button>
           </div>
         </div>
       </n-collapse-item>
