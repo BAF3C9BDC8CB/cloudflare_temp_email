@@ -10,6 +10,12 @@ const readFrontendFile = (relativePath) =>
     readFileSync(resolve(frontendRoot, relativePath), 'utf8')
 
 describe('Private Mail branding contract', () => {
+    it('waits for the initial router resolution before mounting the app', () => {
+        const mainSource = readFrontendFile('src/main.js')
+
+        expect(mainSource).toMatch(/await router\.isReady\(\)/)
+    })
+
     it('uses the requested English and Chinese visible brand', () => {
         expect(MESSAGE_REGISTRY['views.Header'].title).toEqual({
             en: 'Private Mail',

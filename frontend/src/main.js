@@ -10,4 +10,6 @@ const app = createApp(App)
 app.use(i18n)
 app.use(router)
 app.use(head)
+
+await router.isReady()
 app.mount('#app')
