@@ -10,7 +10,13 @@
 
 ### Features
 
+- feat: |Worker| Mailbox addresses can generate permanent public links via `POST/GET/DELETE /api/public_link` and the token-only read endpoint `GET /public_api/mails`; tokens are 10-character Base62 CSPRNG values, one link is active per address, and regeneration, revocation, deletion, or transfer cleans up immediately
+- feat: |Frontend| Added Copy Public Link and Revoke Public Link actions to the address bar and user mailbox list, plus a read-only `/m/<token>` mailbox page reusing the existing mail list and renderer
+
 ### Bug Fixes
+
+- fix: |Frontend| Register all public-link address-bar labels under the exact `components.AddressSelect` namespace while keeping user mailbox row actions in their own namespace
+- fix: |Worker| Accept only canonical non-negative integer `limit`/`offset` values in the public mail list and return the corresponding 400 errors
 
 ### Improvements
 

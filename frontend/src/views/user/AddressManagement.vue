@@ -3,16 +3,19 @@ import { ref, h, onMounted } from 'vue';
 import { useScopedI18n } from '@/i18n/app'
 import { useRouter } from 'vue-router';
 import { NBadge, NPopconfirm, NButton } from 'naive-ui'
+import useClipboard from 'vue-clipboard3'
 
 import { useGlobalState } from '../../store'
 import { api } from '../../api'
 import { getRouterPathWithLang } from '../../utils'
+import { buildPublicLinkUrl } from '../../utils/public-link'
 
 import Login from '../common/Login.vue';
 
 const { jwt } = useGlobalState()
 const message = useMessage()
 const router = useRouter()
+const { toClipboard: copyToClipboard } = useClipboard()
 
 const { locale, t } = useScopedI18n('views.user.AddressManagement')
 
@@ -50,6 +53,30 @@ const unbindAddress = async (address_id) => {
     } catch (error) {
         console.log(error)
         message.error(error.message || "error");
+    }
+}
+
+const copyPublicLink = async (row) => {
+    try {
+        const { jwt: addressJwt } = await api.fetch(`/user_api/bind_address_jwt/${row.id}`)
+        if (!addressJwt) throw new Error('jwt not found')
+        let link = await api.fetch('/api/public_link', {
+            headers: { Authorization: `Bearer ${addressJwt}` },
+        })
+        let token = link?.token
+        if (!token) {
+            link = await api.fetch('/api/public_link', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${addressJwt}` },
+            })
+            token = link?.token
+        }
+        const path = buildPublicLinkUrl(token)
+        if (!path) throw new Error('token not found')
+        await copyToClipboard(window.location.origin + path)
+        message.success(t('publicLinkCopied'))
+    } catch (error) {
+        message.error(error.message || 'error')
     }
 }
 
@@ -169,6 +196,14 @@ const columns = [
                         ),
                         default: () => t('unbindAddressTip')
                     }
+                ),
+                h(NButton,
+                    {
+                        tertiary: true,
+                        type: "primary",
+                        onClick: () => copyPublicLink(row),
+                    },
+                    { default: () => t('copyPublicLink') }
                 ),
             ])
         }

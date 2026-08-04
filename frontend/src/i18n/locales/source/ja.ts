@@ -617,5 +617,17 @@ export const jaMessages = {
   "components.AddressCredentialModal.starttls": "STARTTLS",
   "components.AddressCredentialModal.tip": "これらの認証情報は信頼できるクライアントと Agent でのみ使用してください。",
   "components.AddressCredentialModal.title": "アドレス認証情報と接続方法",
-  "components.AddressCredentialModal.username": "ユーザー名"
+  "components.AddressCredentialModal.username": "ユーザー名",
+  "components.AddressSelect.copyPublicLink": "Copy Public Link",
+  "components.AddressSelect.publicLinkCopied": "Public link copied",
+  "components.AddressSelect.publicLinkRevokeTip": "The public link will stop working immediately. Continue?",
+  "components.AddressSelect.publicLinkRevoked": "Public link revoked",
+  "components.AddressSelect.revokePublicLink": "Revoke Public Link",
+  "views.PublicMail.address": "Mailbox",
+  "views.PublicMail.invalidLink": "Invalid or revoked link",
+  "views.PublicMail.invalidLinkTip": "This public link does not exist or has been revoked by its owner.",
+  "views.PublicMail.publicMailbox": "Public Mailbox",
+  "views.PublicMail.rateLimited": "Too many requests, please try again later.",
+  "views.user.AddressManagement.copyPublicLink": "Copy Public Link",
+  "views.user.AddressManagement.publicLinkCopied": "Public link copied"
 }

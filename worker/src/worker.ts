@@ -6,6 +6,7 @@ import { Jwt } from 'hono/utils/jwt'
 import { api as commonApi } from './commom_api';
 import { api as openAuthApi } from './open_api/auth';
 import { api as mailsApi } from './mails_api'
+import { api as publicApi } from './public_api'
 import { api as userApi } from './user_api';
 import { api as adminApi } from './admin_api';
 import { api as apiSendMail } from './mails_api/send_mail_api'
@@ -20,6 +21,7 @@ import { checkAccessControl } from './ip_blacklist';
 const API_PATHS = [
 	"/api/",
 	"/open_api/",
+	"/public_api/",
 	"/user_api/",
 	"/admin/",
 	"/telegram/",
@@ -53,7 +55,7 @@ app.use('/*', async (c, next) => {
 
 	// check header x-custom-auth
 	const passwords = getPasswords(c);
-	if (!c.req.path.startsWith("/open_api") && !c.req.path.startsWith("/telegram/") && passwords && passwords.length > 0) {
+	if (!c.req.path.startsWith("/open_api") && !c.req.path.startsWith("/telegram/") && !c.req.path.startsWith("/public_api/") && passwords && passwords.length > 0) {
 		const auth = c.req.raw.headers.get("x-custom-auth");
 		if (!auth || !passwords.includes(auth)) {
 			return c.text(msgs.CustomAuthPasswordMsg, 401)
@@ -65,6 +67,7 @@ app.use('/*', async (c, next) => {
 		c.req.path.startsWith("/api/new_address")
 		|| c.req.path.startsWith("/api/send_mail")
 		|| c.req.path.startsWith("/external/api/send_mail")
+		|| c.req.path.startsWith("/public_api/")
 		|| c.req.path.startsWith("/user_api/register")
 		|| c.req.path.startsWith("/user_api/verify_code")
 	) {
@@ -256,6 +259,7 @@ app.use('/admin/*', async (c, next) => {
 app.route('/', commonApi)
 app.route('/', openAuthApi)
 app.route('/', mailsApi)
+app.route('/', publicApi)
 app.route('/', userApi)
 app.route('/', adminApi)
 app.route('/', apiSendMail)

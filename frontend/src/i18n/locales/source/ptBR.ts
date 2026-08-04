@@ -617,5 +617,17 @@ export const ptBRMessages = {
   "components.AddressCredentialModal.starttls": "STARTTLS",
   "components.AddressCredentialModal.tip": "Use estas credenciais somente com clientes e agents confiáveis.",
   "components.AddressCredentialModal.title": "Credenciais do endereço e métodos de conexão",
-  "components.AddressCredentialModal.username": "Nome de usuário"
+  "components.AddressCredentialModal.username": "Nome de usuário",
+  "components.AddressSelect.copyPublicLink": "Copy Public Link",
+  "components.AddressSelect.publicLinkCopied": "Public link copied",
+  "components.AddressSelect.publicLinkRevokeTip": "The public link will stop working immediately. Continue?",
+  "components.AddressSelect.publicLinkRevoked": "Public link revoked",
+  "components.AddressSelect.revokePublicLink": "Revoke Public Link",
+  "views.PublicMail.address": "Mailbox",
+  "views.PublicMail.invalidLink": "Invalid or revoked link",
+  "views.PublicMail.invalidLinkTip": "This public link does not exist or has been revoked by its owner.",
+  "views.PublicMail.publicMailbox": "Public Mailbox",
+  "views.PublicMail.rateLimited": "Too many requests, please try again later.",
+  "views.user.AddressManagement.copyPublicLink": "Copy Public Link",
+  "views.user.AddressManagement.publicLinkCopied": "Public link copied"
 }

@@ -44,6 +44,7 @@ const apiFetch = async (path, options = {}) => {
         if (adminAuthHeader) headers['x-admin-auth'] = adminAuthHeader;
         const authorizationHeader = safeBearerHeader(jwt.value);
         if (authorizationHeader) headers['Authorization'] = authorizationHeader;
+        if (options.headers) Object.assign(headers, options.headers);
 
         const response = await instance.request(path, {
             method: options.method || 'GET',

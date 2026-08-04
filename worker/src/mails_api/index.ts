@@ -7,6 +7,7 @@ import auto_reply from './auto_reply'
 import webhook_settings from './webhook_settings';
 import s3_attachment from './s3_attachment';
 import address_auth from './address_auth';
+import public_link from './public_link';
 
 export const api = new Hono<HonoCustomType>()
 
@@ -44,3 +45,8 @@ api.delete('/api/clear_sent_items', mails_crud.clearSentItems)
 // address auth
 api.post('/api/address_change_password', address_auth.changePassword)
 api.post('/api/address_login', address_auth.login)
+
+// public mail link
+api.post('/api/public_link', public_link.createPublicLink)
+api.get('/api/public_link', public_link.getPublicLink)
+api.delete('/api/public_link', public_link.revokePublicLink)

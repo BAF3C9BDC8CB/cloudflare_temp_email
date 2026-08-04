@@ -284,9 +284,29 @@ export const MESSAGE_REGISTRY = {
       "en": "Copy",
       "zh": "复制"
     },
+    "copyPublicLink": {
+      "en": "Copy Public Link",
+      "zh": "复制公开链接"
+    },
     "localAddresses": {
       "en": "Local Addresses",
       "zh": "本地地址"
+    },
+    "publicLinkCopied": {
+      "en": "Public link copied",
+      "zh": "公开链接已复制"
+    },
+    "publicLinkRevokeTip": {
+      "en": "The public link will stop working immediately. Continue?",
+      "zh": "撤销后公开链接将立即失效，确定继续吗？"
+    },
+    "publicLinkRevoked": {
+      "en": "Public link revoked",
+      "zh": "公开链接已撤销"
+    },
+    "revokePublicLink": {
+      "en": "Revoke Public Link",
+      "zh": "撤销公开链接"
     },
     "userAddresses": {
       "en": "User Addresses",
@@ -844,6 +864,10 @@ export const MESSAGE_REGISTRY = {
       "en": "Change Address",
       "zh": "切换地址"
     },
+    "copyPublicLink": {
+      "en": "Copy Public Link",
+      "zh": "复制公开链接"
+    },
     "create_or_bind": {
       "en": "Create or Bind",
       "zh": "创建或绑定"
@@ -855,6 +879,10 @@ export const MESSAGE_REGISTRY = {
     "name": {
       "en": "Name",
       "zh": "名称"
+    },
+    "publicLinkCopied": {
+      "en": "Public link copied",
+      "zh": "公开链接已复制"
     },
     "send_count": {
       "en": "Send Count",
@@ -883,6 +911,28 @@ export const MESSAGE_REGISTRY = {
     "unbindAddressTip": {
       "en": "Before unbinding, please switch to this email address and save the email address credential.",
       "zh": "解绑前请切换到此邮箱地址并保存邮箱地址凭证。"
+    }
+  },
+  "views.PublicMail": {
+    "address": {
+      "en": "Mailbox",
+      "zh": "邮箱地址"
+    },
+    "invalidLink": {
+      "en": "Invalid or revoked link",
+      "zh": "链接无效或已被撤销"
+    },
+    "invalidLinkTip": {
+      "en": "This public link does not exist or has been revoked by its owner.",
+      "zh": "该公开链接不存在，或已被所有者撤销。"
+    },
+    "publicMailbox": {
+      "en": "Public Mailbox",
+      "zh": "公开邮箱"
+    },
+    "rateLimited": {
+      "en": "Too many requests, please try again later.",
+      "zh": "请求过于频繁，请稍后重试。"
     }
   },
   "views.index.AccountSettings": {

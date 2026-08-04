@@ -32,7 +32,8 @@ config.server = {\
     "/api": { target: workerTarget, changeOrigin: true },\
     "/admin": { target: workerTarget, changeOrigin: true },\
     "/user_api": { target: workerTarget, changeOrigin: true },\
-    "/open_api": { target: workerTarget, changeOrigin: true },\
+     "/open_api": { target: workerTarget, changeOrigin: true },\
+     "/public_api": { target: workerTarget, changeOrigin: true },\
     "/external": { target: workerTarget, changeOrigin: true },\
     "/health_check": { target: workerTarget, changeOrigin: true },\
   },\

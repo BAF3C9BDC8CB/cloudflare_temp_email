@@ -181,6 +181,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
                 { text: 'AI Agent Mailbox Usage', link: 'feature/agent-email' },
                 { text: 'Send Email API', link: 'feature/send-mail-api' },
                 { text: 'Delete Address API', link: 'feature/delete-address' },
+                { text: 'Public Link API', link: 'feature/public-link' },
             ]
         },
         {

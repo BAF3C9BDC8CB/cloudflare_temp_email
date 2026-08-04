@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { useLocalStorage } from '@vueuse/core'
 import { useScopedI18n } from '@/i18n/app'
 import { useMessage } from 'naive-ui'
@@ -8,6 +9,7 @@ import { Copy } from '@vicons/fa'
 
 import { useGlobalState } from '../store'
 import { api } from '../api'
+import { buildPublicLinkUrl } from '../utils/public-link'
 
 const props = defineProps({
     showCopy: {
@@ -22,6 +24,7 @@ const props = defineProps({
 
 const message = useMessage()
 const { toClipboard } = useClipboard()
+const router = useRouter()
 
 const {
     jwt, settings, userJwt, isTelegram, openSettings, telegramApp
@@ -203,6 +206,32 @@ const copy = async () => {
     }
 }
 
+const copyPublicLink = async () => {
+    try {
+        let response = await api.fetch('/api/public_link')
+        let token = response?.token
+        if (!token) {
+            response = await api.fetch('/api/public_link', { method: 'POST' })
+            token = response?.token
+        }
+        const path = buildPublicLinkUrl(token)
+        if (!path) throw new Error('token not found')
+        await toClipboard(window.location.origin + router.resolve({ path }).href)
+        message.success(t('publicLinkCopied'))
+    } catch (error) {
+        message.error(error.message || 'error')
+    }
+}
+
+const revokePublicLink = async () => {
+    try {
+        await api.fetch('/api/public_link', { method: 'DELETE' })
+        message.success(t('publicLinkRevoked'))
+    } catch (error) {
+        message.error(error.message || 'error')
+    }
+}
+
 onMounted(async () => {
     await refreshAddressOptions();
 });
@@ -221,6 +250,17 @@ watch([userJwt, isTelegram, () => settings.value.address], async () => {
         <n-button v-if="showCopy" class="address-copy" @click="copy" :size="size" tertiary type="primary">
             <n-icon :component="Copy" /> {{ t('copy') }}
         </n-button>
+        <n-button v-if="showCopy" class="address-copy" @click="copyPublicLink" :size="size" tertiary type="primary">
+            <n-icon :component="Copy" /> {{ t('copyPublicLink') }}
+        </n-button>
+        <n-popconfirm v-if="showCopy" @positive-click="revokePublicLink">
+            <template #trigger>
+                <n-button class="address-copy" :size="size" tertiary type="warning">
+                    {{ t('revokePublicLink') }}
+                </n-button>
+            </template>
+            {{ t('publicLinkRevokeTip') }}
+        </n-popconfirm>
     </n-flex>
 </template>
 

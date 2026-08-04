@@ -10,7 +10,13 @@
 
 ### Features
 
+- feat: |Worker| 邮箱地址支持生成永久公开链接：新增地址级管理接口 `POST/GET/DELETE /api/public_link` 与令牌只读接口 `GET /public_api/mails`；令牌为 10 位 Base62 安全随机串，每地址仅一个生效链接，重新生成、撤销、删除或迁移地址后立即清理
+- feat: |Frontend| 首页地址栏和用户邮箱列表新增「复制公开链接」与「撤销公开链接」，新增只读公开邮箱页面 `/m/<token>`，复用现有邮件列表和渲染组件
+
 ### Bug Fixes
+
+- fix: |Frontend| 将地址栏公开链接操作所需的文案完整注册在 `components.AddressSelect` 命名空间，并保留用户邮箱列表行操作的独立命名空间
+- fix: |Worker| 公开邮件列表仅接受规范的非负整数 `limit`/`offset` 参数，并返回对应的 400 错误
 
 ### Improvements
 

@@ -221,6 +221,9 @@ const UserBindAddressModule = {
         await c.env.DB.prepare(
             `DELETE FROM address WHERE id = ? `
         ).bind(address_id).run();
+        await c.env.DB.prepare(
+            `DELETE FROM address_public_link WHERE address_id = ? `
+        ).bind(address_id).run();
         // new address
         const { success: newAddressSuccess } = await c.env.DB.prepare(
             `INSERT INTO address(name) VALUES(?)`

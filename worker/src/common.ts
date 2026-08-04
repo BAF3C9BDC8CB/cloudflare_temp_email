@@ -26,6 +26,16 @@ const areValidDomainLabels = (labels: string[]): boolean => {
     return labels.length > 0 && labels.every((label) => isValidDomainLabel(label));
 }
 
+const parseNonNegativeInteger = (
+    value: string | number | undefined | null
+): number | undefined => {
+    if (value == null) return undefined;
+    if (typeof value === 'string' && !/^(0|[1-9]\d*)$/.test(value)) return undefined;
+
+    const parsed = typeof value === 'string' ? Number(value) : value;
+    return Number.isInteger(parsed) && parsed >= 0 ? parsed : undefined;
+}
+
 /**
  * Check if send mail is enabled for a specific domain
  */
@@ -543,6 +553,10 @@ const batchDeleteAddressWithData = async (
         `DELETE FROM users_address WHERE address_id IN ( ` +
         `SELECT id FROM address WHERE ${addressQueryCondition})`
     ).run();
+    await c.env.DB.prepare(
+        `DELETE FROM address_public_link WHERE address_id IN ( ` +
+        `SELECT id FROM address WHERE ${addressQueryCondition})`
+    ).run();
     // delete address
     await c.env.DB.prepare(`
         DELETE FROM address WHERE ${addressQueryCondition}`
@@ -592,13 +606,16 @@ export const deleteAddressWithData = async (
     const { success: addressSuccess } = await c.env.DB.prepare(
         `DELETE FROM users_address WHERE address_id = ? `
     ).bind(address_id).run();
+    const { success: publicLinkSuccess } = await c.env.DB.prepare(
+        `DELETE FROM address_public_link WHERE address_id = ? `
+    ).bind(address_id).run();
     const { success: autoReplySuccess } = await c.env.DB.prepare(
         `DELETE FROM auto_reply_mails WHERE address = ? `
     ).bind(address).run();
     const { success } = await c.env.DB.prepare(
         `DELETE FROM address WHERE name = ? `
     ).bind(address).run();
-    if (!success || !mailSuccess || !sendboxSuccess || !addressSuccess || !sendAccess || !autoReplySuccess) {
+    if (!success || !mailSuccess || !sendboxSuccess || !addressSuccess || !publicLinkSuccess || !sendAccess || !autoReplySuccess) {
         throw new Error(msgs.OperationFailedMsg)
     }
     return true;
@@ -614,16 +631,12 @@ export const handleListQuery = async (
     hiddenFields: string[] = []
 ): Promise<Response> => {
     const msgs = i18n.getMessagesbyContext(c);
-    if (typeof limit === "string") {
-        limit = parseInt(limit);
-    }
-    if (typeof offset === "string") {
-        offset = parseInt(offset);
-    }
-    if (!limit || limit < 0 || limit > 100) {
+    limit = parseNonNegativeInteger(limit);
+    offset = parseNonNegativeInteger(offset);
+    if (!limit || Number.isNaN(limit) || limit < 0 || limit > 100) {
         return c.text(msgs.InvalidLimitMsg, 400)
     }
-    if (offset == null || offset == undefined || offset < 0) {
+    if (offset == null || offset == undefined || Number.isNaN(offset) || offset < 0) {
         return c.text(msgs.InvalidOffsetMsg, 400)
     }
     const orderClause = orderBy || 'id desc';
@@ -665,10 +678,10 @@ export const handleMailListQuery = async (
 ): Promise<Response> => {
     const { resolveRawEmailList } = await import('./gzip');
     const msgs = i18n.getMessagesbyContext(c);
-    if (typeof limit === "string") limit = parseInt(limit);
-    if (typeof offset === "string") offset = parseInt(offset);
-    if (!limit || limit < 0 || limit > 100) return c.text(msgs.InvalidLimitMsg, 400);
-    if (offset == null || offset == undefined || offset < 0) return c.text(msgs.InvalidOffsetMsg, 400);
+    limit = parseNonNegativeInteger(limit);
+    offset = parseNonNegativeInteger(offset);
+    if (!limit || Number.isNaN(limit) || limit < 0 || limit > 100) return c.text(msgs.InvalidLimitMsg, 400);
+    if (offset == null || offset == undefined || Number.isNaN(offset) || offset < 0) return c.text(msgs.InvalidOffsetMsg, 400);
     const orderClause = orderBy || 'id desc';
     const resultsQuery = `${query} order by ${orderClause} limit ? offset ?`;
     const { results } = await c.env.DB.prepare(resultsQuery).bind(

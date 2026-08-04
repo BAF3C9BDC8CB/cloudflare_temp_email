@@ -43,6 +43,11 @@ const router = createRouter({
             component: () => import('../views/telegram/Mail.vue')
         },
         {
+            path: '/m/:token',
+            alias: '/:lang/m/:token',
+            component: () => import('../views/PublicMail.vue')
+        },
+        {
             name: 'not-found',
             path: '/:pathMatch(.*)*',
             redirect: '/'
