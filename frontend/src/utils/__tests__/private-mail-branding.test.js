@@ -10,10 +10,12 @@ const readFrontendFile = (relativePath) =>
     readFileSync(resolve(frontendRoot, relativePath), 'utf8')
 
 describe('Private Mail branding contract', () => {
-    it('waits for the initial router resolution before mounting the app', () => {
+    it('classifies the initial browser pathname before the router mounts', () => {
         const mainSource = readFrontendFile('src/main.js')
+        const appSource = readFrontendFile('src/App.vue')
 
-        expect(mainSource).toMatch(/await router\.isReady\(\)/)
+        expect(mainSource).not.toMatch(/await router\.isReady\(\)/)
+        expect(appSource).toContain('window.location.pathname')
     })
 
     it('uses the requested English and Chinese visible brand', () => {

@@ -2,8 +2,8 @@
 import {
   darkTheme,
 } from 'naive-ui'
-import { computed, onMounted, watchEffect } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, onMounted, ref, watchEffect } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useScript } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
 import { useGlobalState } from './store'
@@ -21,11 +21,23 @@ const {
 const adClient = import.meta.env.VITE_GOOGLE_AD_CLIENT;
 const adSlot = import.meta.env.VITE_GOOGLE_AD_SLOT;
 const route = useRoute()
+const router = useRouter()
 const { locale } = useI18n({ useScope: 'global' });
 const theme = computed(() => isDark.value ? darkTheme : null)
 const localeConfig = computed(() => getNaiveLocaleConfig(isSupportedLocale(locale.value) ? locale.value : DEFAULT_LOCALE))
 const isMobile = useIsMobile()
-const isPublicRoute = computed(() => isPublicMailRoutePath(route.path))
+const initialPath = typeof window === 'undefined' ? '' : window.location.pathname
+const initialPublicRoute = isPublicMailRoutePath(initialPath)
+const hasResolvedInitialRoute = ref(false)
+router.afterEach(() => {
+  hasResolvedInitialRoute.value = true
+})
+const isPublicRoute = computed(() => {
+  if (!hasResolvedInitialRoute.value) {
+    return initialPublicRoute || isPublicMailRoutePath(route.path)
+  }
+  return isPublicMailRoutePath(route.path)
+})
 const showSideMargin = computed(() => !isMobile.value && useSideMargin.value);
 const showAd = computed(() => !isPublicRoute.value && !isMobile.value && adClient && adSlot);
 const gridMaxCols = computed(() => showAd.value ? 8 : 12);
